@@ -3,12 +3,13 @@ import {
   zStudentPostBody,
   zStudentPutBody,
   zStudentId,
+  zCourseId
 } from "../libs/zodValidators.js";
 
 import type { Student, Course } from "../libs/types.js";
 
 // import database
-import { students, courses } from "../db/db.js";
+import { students, courses,enrollments  } from "../db/db.js";
 
 const router = Router();
 
@@ -172,45 +173,85 @@ router.put("/", (req: Request, res: Response) => {
   }
 });
 
-// DELETE /api/v2/students, body = {studentId}
+// // DELETE /api/v2/students, body = {studentId}
+// router.delete("/", (req: Request, res: Response) => {
+//   try {
+//     const body = req.body;
+//     const parseResult = zStudentId.safeParse(body.studentId);
+
+//     if (!parseResult.success) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Validation failed",
+//         error: parseResult.error.issues[0]?.message,
+//       });
+//     }
+
+//     const foundIndex = students.findIndex(
+//       (std: Student) => std.studentId === body.studentId
+//     );
+
+//     if (foundIndex === -1) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Student does not exists",
+//       });
+//     }
+
+//     // delete found student from array
+//     students.splice(foundIndex, 1);
+
+//     res.status(200).json({
+//       success: true,
+//       message: `Student ${body.studentId} has been deleted successfully`,
+//     });
+//   } catch (err) {
+//     return res.status(500).json({
+//       success: false,
+//       message: "Somthing is wrong, please try again",
+//       error: err,
+//     });
+//   }
+// });
+
 router.delete("/", (req: Request, res: Response) => {
-  try {
-    const body = req.body;
-    const parseResult = zStudentId.safeParse(body.studentId);
+    try {
+        const { studentId, courseNo } = req.body;
 
-    if (!parseResult.success) {
-      return res.status(400).json({
-        success: false,
-        message: "Validation failed",
-        error: parseResult.error.issues[0]?.message,
-      });
+        const parseResult1 = zStudentId.safeParse(studentId);
+        const parseResult2 = zCourseId.safeParse(courseNo);
+
+        if (!parseResult1.success || !parseResult2.success) {
+            return res.status(400).json({
+                ok: false,
+                message: "Validation failed"
+            });
+        }
+
+        const foundIndex = enrollments.findIndex(
+            (enrollment) => enrollment.studentId === studentId && enrollment.courseId === courseNo
+        );
+
+        if (foundIndex === -1) {
+            return res.status(404).json({
+                ok: false,
+                message: "Enrollment does not exist",
+            });
+        }
+        enrollments.splice(foundIndex, 1);
+
+        return res.status(200).json({
+            ok: true,
+            message: "Enrollment has been deleted",
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: "Something is wrong, please try again",
+            error: err,
+        });
     }
-
-    const foundIndex = students.findIndex(
-      (std: Student) => std.studentId === body.studentId
-    );
-
-    if (foundIndex === -1) {
-      return res.status(404).json({
-        success: false,
-        message: "Student does not exists",
-      });
-    }
-
-    // delete found student from array
-    students.splice(foundIndex, 1);
-
-    res.status(200).json({
-      success: true,
-      message: `Student ${body.studentId} has been deleted successfully`,
-    });
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: "Somthing is wrong, please try again",
-      error: err,
-    });
-  }
 });
 
 export default router;

@@ -14,15 +14,24 @@
   "packageManager": "pnpm@10.12.4",
   "type": "module",
   "dependencies": {
+    "cors": "^2.8.6",
+    "debug": "^4.4.3",
     "express": "^5.1.0",
+    "helmet": "^8.3.0",
     "morgan": "^1.10.1",
     "zod": "^4.1.11"
   },
   "devDependencies": {
+    "@tsconfig/node-lts": "^24.0.0",
+    "@tsconfig/node-ts": "^23.6.4",
+    "@types/cors": "^2.8.19",
+    "@types/debug": "^4.1.13",
     "@types/express": "^5.0.3",
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.5.1",
+    "cross-env": "^10.1.0",
     "nodemon": "^3.1.10",
+    "tsc-alias": "^1.9.1",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2"
   }
