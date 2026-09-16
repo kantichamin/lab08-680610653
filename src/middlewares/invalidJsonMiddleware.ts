@@ -27,6 +27,7 @@ const errorHandler = (
   }
 
   // Pass other errors to the default Express error handler or another custom handler
+  // ส่ง รีเควสต่อ
   next(err);
 };
 

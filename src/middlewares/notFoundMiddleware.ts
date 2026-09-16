@@ -3,7 +3,7 @@ import { type Request, type Response, type NextFunction } from "express";
 const notFoundMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction // ต้องส่งต่อ
 ) => {
   res.status(404).json({
     success: false,

@@ -106,7 +106,7 @@ router.post("/", async (req: Request, res: Response) => {
       (student) => student.studentId === body.studentId
     );
     if (found) {
-      return res.status(400).json({
+      return res.status(409).json({
         success: false,
         message: "Student is already exists",
       });

@@ -18,29 +18,15 @@ const port = 3000;
 app.use(express.json());
 
 // logger middleware
-app.use(morgan("dev"));
-// app.use(morgan("combined"));
+app.use(morgan("dev")); // บอกว่าแก้อะไร เป็นยังไง
+// app.use(morgan("combined")); // บอกว่ามาจากไหน
 
 // JSON parser middleware
-app.use(invalidJsonMiddleware);
+app.use(invalidJsonMiddleware); //ใช้ก่อนเจอ endpoint
 
 // Endpoints
 app.get("/", (req: Request, res: Response) => {
   res.send("Lecture18 API services");
-});
-
-app.get("/me", (req: Request, res: Response) => {
-  res.status(200).json({
-    success: true,
-    message: "Student Information",
-    data: {
-      studentId: "600610999",
-      firstName: "Dome",
-      lastName: "Potikanond",
-      program: "CPE",
-      section: "001",
-    },
-  });
 });
 
 app.use("/api/v1/enrollments", studentRouter_v1);
@@ -49,19 +35,20 @@ app.use("/api/v3/students", studentRouter_v3);
 app.use("/api/v2/courses", courseRouter_v2);
 app.use("/api/v2/enrollments", studentRouter_v2);
 
-// endpoint check middleware
-app.use(notFoundMiddleware);
-
-app.listen(port, () => {
-  console.log(`🚀 Server running on http://localhost:${port}`);
-});
-
 app.get("/api/me", (req: Request, res: Response) => {
   return res.status(200).json({
     ok: true,
     fullName: "Kanticha Chaichana",
     studentId: "680610653"
   })
+});
+
+
+// endpoint check middleware เรียกใช้ middlrware
+app.use(notFoundMiddleware);
+
+app.listen(port, () => {
+  console.log(`🚀 Server running on http://localhost:${port}`);
 });
 
 // Export app for vercel deployment
